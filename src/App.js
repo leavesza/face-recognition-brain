@@ -4,7 +4,7 @@ import ParticlesBg from 'particles-bg';
 import Clarifai from 'clarifai';
 import FaceRecognition from './components/FaceRecognition/FaceRecognition';
 import Navigation from './components/Navigation/Navigation';
-import Signin from './components/SignIn/SignIn';
+import Signin from './components/Signin/Signin';
 import Register from './components/Register/Register';
 import Logo from './components/Logo/Logo';
 import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
@@ -12,9 +12,9 @@ import Rank from './components/Rank/Rank';
 import './App.css';
 
 //You must add your own API key here from Clarifai.
-const app = new Clarifai.App({
- apiKey: 'YOUR API KEY HERE'
-});
+// const app = new Clarifai.App({
+//  apiKey: 'YOUR API KEY HERE'
+// });
 
 // No Longer need this. Updated to particles-bg
 // const particlesOptions = {
@@ -28,6 +28,48 @@ const app = new Clarifai.App({
 //     }
 //   }
 // }
+
+
+
+const returnClarifaiRequestOptions = (imageUrl) =>{
+// Your PAT (Personal Access Token) can be found in the portal under Authentification
+const PAT = 'a0bc0e2b52f64fe4bd22e025f586b1a1';
+// Specify the correct user_id/app_id pairings
+// Since you're making inferences outside your app's scope
+const USER_ID = 'yaseen';       
+const APP_ID = 'brainapp';
+// Change these to whatever model and image URL you want to use
+const MODEL_ID = 'face-detection';
+const IMAGE_URL = imageUrl;
+
+const raw = JSON.stringify({
+  "user_app_id": {
+      "user_id": USER_ID,
+      "app_id": APP_ID
+  },
+  "inputs": [
+      {
+          "data": {
+              "image": {
+                  "url": IMAGE_URL
+              }
+          }
+      }
+  ]
+});
+
+const requestOptions = {
+  method: 'POST',
+  headers: {
+      'Accept': 'application/json',
+      'Authorization': 'Key ' + PAT
+  },
+  body: raw
+};
+
+return requestOptions;
+}
+
 
 class App extends Component {
   constructor() {
@@ -87,9 +129,10 @@ class App extends Component {
     // for the Face Detect Mode: https://www.clarifai.com/models/face-detection
     // If that isn't working, then that means you will have to wait until their servers are back up. 
 
-    app.models.predict('face-detection', this.state.input)
+    // app.models.predict('face-detection', this.state.input)
+    fetch("https://api.clarifai.com/v2/models/" + 'face-detection' + "/outputs", returnClarifaiRequestOptions(this.state.input))
+    .then(response => response.json())
       .then(response => {
-        console.log('hi', response)
         if (response) {
           fetch('http://localhost:3000/image', {
             method: 'put',
@@ -122,7 +165,7 @@ class App extends Component {
     const { isSignedIn, imageUrl, route, box } = this.state;
     return (
       <div className="App">
-        <ParticlesBg type="fountain" bg={true} />
+        <ParticlesBg className='particles' type="cobweb" num={75} bg={true} color="#ffffff" opacity = '0.1'/>
         <Navigation isSignedIn={isSignedIn} onRouteChange={this.onRouteChange} />
         { route === 'home'
           ? <div>
