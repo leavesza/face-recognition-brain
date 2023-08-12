@@ -11,10 +11,10 @@ const FaceRecognition = ({imageUrl, box}) =>{
             src={imageUrl}
             width='500px'
             height='auto'
-            style={{ visibility: imageUrl ? 'visible' : 'hidden' }}
-            onError={(e) => {
-                e.target.style.visibility = 'hidden';
-            }}
+            // style={{ visibility: imageUrl ? 'visible' : 'hidden' }}
+            // onError={(e) => {
+            //     e.target.style.visibility = 'hidden';
+            // }}
             />
             <div className='bounding-box' style={{top: box.topRow, right: box.rightCol, bottom: box.bottomRow, left: box.leftCol}}></div>
                 </div>

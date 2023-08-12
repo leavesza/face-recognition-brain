@@ -6,6 +6,3 @@
     justify-content: center;
     cursor: pointer;
 }
-img[alt=""] {
-    display: none;
-}
